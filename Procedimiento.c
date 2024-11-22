@@ -71,7 +71,6 @@ void Inicio()
             flag = 0; // Sale del switch con falso
             break;
         case 2:
-            system("cls");
             printf("Reglas y funciones del juego\n");
             printf("Busca las llaves para abrir las puertas que hayan en la habitacion\n");
             printf("Evita caer en pozos 'O'\n");
