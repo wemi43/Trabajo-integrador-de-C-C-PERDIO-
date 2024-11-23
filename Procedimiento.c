@@ -1,9 +1,8 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <windows.h>
-#include <time.h>
-#include <conio.h>
-#include <pthread.h>
+#include <stdio.h>   // Prelibrerias de C
+#include <stdlib.h>  // generacion de numeros aleatorios
+#include <windows.h> // limpiar pantalla
+#include <conio.h>   // funciones para el timer
+#include <pthread.h> // hilos (No es nativo de C pero se utilizo para la creacion de HILOS)
 
 #define H 100
 #define Xx 20
@@ -13,7 +12,7 @@ int DY;
 int random;
 int pozo;
 int fin_tempo;
-int o;
+int o; // Variables contadores
 int gano;
 int perdio;
 int resg_h;
@@ -37,6 +36,7 @@ char tecla;
 pthread_t tempor, teclar;
 char mapa[H][Xx][Yy];
 int nivel[H] = {0};
+
 // Procedimiento para cambiar la posición
 void gotoxy(int x, int y)
 {
@@ -93,6 +93,7 @@ void Inicio()
     } while (flag);
 }
 
+// Procedimiento Para iniciar el vector
 void iniciar();
 void iniciar()
 {
@@ -101,6 +102,7 @@ void iniciar()
         nivel[i] = 0;
     }
 }
+
 // Procedimiento rellenar array
 void Base(char arr[H][Xx][Yy]);
 void Base(char arr[H][Xx][Yy])
@@ -130,6 +132,7 @@ void Base(char arr[H][Xx][Yy])
         }
     }
 }
+
 // Procedimiento mostrar por pantalla el array
 void imprimir(char arr[H][Xx][Yy], int h);
 void imprimir(char arr[H][Xx][Yy], int h)
@@ -143,6 +146,7 @@ void imprimir(char arr[H][Xx][Yy], int h)
         printf("\n");
     }
 }
+
 // Procedimiento para ver una llave cerca
 void cerca(int h);
 void cerca(int h)
@@ -244,7 +248,7 @@ void caida(int h)
         printf("Presiona enter para continuar.\n");
         murio = 1;
         verd = 0;
-        getch();
+        getchar();
     }
 }
 
@@ -265,23 +269,23 @@ void tecleo(int h)
         }
         mapa[h][px][py] = ' ';
         tecla = getch();
-        if (tecla == 87 || tecla == 119)
+        if (tecla == 87 || tecla == 119) // es el código ASCII para W y w
         {
             tecla = 1;
         }
-        else if (tecla == 83 || tecla == 115)
+        else if (tecla == 83 || tecla == 115) // es el código ASCII para S y s
         {
             tecla = 3;
         }
-        else if (tecla == 65 || tecla == 97)
+        else if (tecla == 65 || tecla == 97) // es el código ASCII para A y a
         {
             tecla = 2;
         }
-        else if (tecla == 68 || tecla == 100)
+        else if (tecla == 68 || tecla == 100) // es el código ASCII para D y d
         {
             tecla = 4;
         }
-        else if (tecla == 73 || tecla == 105)
+        else if (tecla == 73 || tecla == 105) // es el código ASCII para I y i
         {
             tecla = 5;
         }
@@ -394,7 +398,7 @@ void r_r()
     r_x = rand() % (Xx - 2) + 1;
 }
 // Procedimiento more_key
-// La x que entre seran las cantidad de llaves que habrá
+// La x que entre seran las cantidad de llaves u objeto que habrá
 void random_position(int x, int h, char cosa);
 void random_position(int x, int h, char cosa)
 {
@@ -559,12 +563,12 @@ void algo_Mapa(int h)
                     if (h < Xx * Yy)
                     {
                         r_r();
-                        random_position(numero, h, 'O');
+                        random_position(numero, h, 'O'); // Genera en una posicion random en el mapa el caracter O (Pozo)
                         numero = numero + 2;
                     }
                 }
-                // Bloque para decidir si gano o volvio al inicio
 
+                // Bloque para decidir si va a ganar o volver al inicio
                 if (h > 5)
                 {
                     gano = rand() % gan + 1;
