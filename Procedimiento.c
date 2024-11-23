@@ -4,9 +4,9 @@
 #include <conio.h>   // funciones para el timer
 #include <pthread.h> // hilos (No es nativo de C pero se utilizo para la creacion de HILOS)
 
-#define H 100
-#define Xx 20
-#define Yy 60
+#define H 100 // Limite de nivel
+#define Xx 20 // Ancho de mapa
+#define Yy 60 // Largo de mapa
 int DX;
 int DY;
 int random;
@@ -31,11 +31,10 @@ int door = 2;
 int verd = 1;
 int minutos = 5;
 int gan = 100;
-int perd = 20;
+int perd = 50;
 char tecla;
 pthread_t tempor, teclar;
 char mapa[H][Xx][Yy];
-int nivel[H] = {0};
 
 // Procedimiento para cambiar la posición
 void gotoxy(int x, int y)
@@ -91,16 +90,6 @@ void Inicio()
         }
 
     } while (flag);
-}
-
-// Procedimiento Para iniciar el vector
-void iniciar();
-void iniciar()
-{
-    for (int i = 0; i < H; i++)
-    {
-        nivel[i] = 0;
-    }
 }
 
 // Procedimiento rellenar array
@@ -569,7 +558,7 @@ void algo_Mapa(int h)
                 }
 
                 // Bloque para decidir si va a ganar o volver al inicio
-                if (h > 5)
+                if (h > 1)
                 {
                     gano = rand() % gan + 1;
                     perdio = rand() % perd + 1;

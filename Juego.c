@@ -7,7 +7,6 @@
 #include "Procedimiento.c"
 int main()
 {
-    iniciar();
     srand(time(0));
     Inicio();
     Base(mapa);
@@ -30,33 +29,27 @@ int main()
         algo_Mapa(o);
         o++;
     } while (1);
-
     if (murio)
     {
         system("cls");
-        gotoxy(40, 15);
+        gotoxy(40, 10);
         printf("Perdiste en el nivel %i.\n", o);
         Sleep(9);
-        gotoxy(40, 16);
-        printf("Presiona enter para salir");
+        gotoxy(40, 11);
+        printf("Gracias por jugar. Presiona enter para salir");
         getchar();
     }
     if (gano == 1)
     {
         system("cls");
-        gotoxy(36, 15);
+        gotoxy(36, 10);
         printf("ENCONTRASTE LA SALIDA Y SALISTE DEL LABERINTO. \n");
-        gotoxy(36, 16);
+        gotoxy(36, 11);
         printf("Tardaste %i habitaciones en salir\n", o);
         Sleep(9);
-        gotoxy(36, 17);
-        printf("Presiona enter para salir");
+        gotoxy(36, 12);
+        printf("Gracias por jugar. Presiona enter para salir");
         getchar();
     }
-    system("cls");
-    Sleep(9);
-    gotoxy(35, 15);
-    printf("Gracias por jugar. Presiona enter para salir");
-    getchar();
     return 0;
 }
