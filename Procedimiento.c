@@ -25,6 +25,7 @@ int key = 0;
 int cont = 0;
 int salir = 0;
 int murio = 0;
+int puntos = 0;
 int segundos = 0;
 int numero = 1;
 int door = 2;
@@ -33,8 +34,12 @@ int minutos = 5;
 int gan = 100;
 int perd = 50;
 char tecla;
+
 pthread_t tempor, teclar;
 char mapa[H][Xx][Yy];
+
+// Para el nombre del jugador
+char nombre[200];
 
 // Procedimiento para cambiar la posición
 void gotoxy(int x, int y)
@@ -176,8 +181,9 @@ void cerca(int h)
         }
         if (tecla == 1)
         {
-            key = key + 1;
+            key++;
             mapa[h][(px - 1)][py] = ' ';
+            puntos = puntos + 2;
         }
     }
     else if (mapa[h][px][(py + 1)] == '*')
@@ -196,8 +202,9 @@ void cerca(int h)
         }
         if (tecla == 1)
         {
-            key = key + 1;
+            key++;
             mapa[h][px][(py + 1)] = ' ';
+            puntos = puntos + 2;
         }
     }
     else if (mapa[h][px][(py - 1)] == '*')
@@ -216,8 +223,9 @@ void cerca(int h)
         }
         if (tecla == 1)
         {
-            key = key + 1;
+            key++;
             mapa[h][px][(py - 1)] = ' ';
+            puntos = puntos + 2;
         }
     }
 }
@@ -471,7 +479,88 @@ static void *tempo(void *parmetrosApasar)
     }
     return NULL;
 }
+// Definimos una estructura para almacenar el nombre y la puntuación.
+typedef struct
+{
+    char nombre[100];
+    int puntos;
+} Jugador;
 
+// Procedimiento para leer puntuaciones, ordenar y mostrar resultados
+void procesarPuntuaciones()
+{
+    Jugador *jugadores;
+    int n = 0;
+
+    // Leer puntuaciones desde el archivo
+    FILE *fp = fopen("Puntos.txt", "r");
+    if (fp == NULL)
+    {
+        printf("Error al abrir el archivo de puntuacion\n");
+        return;
+    }
+
+    int capacidad = 10; // Capacidad inicial
+    jugadores = (Jugador *)malloc(capacidad * sizeof(Jugador));
+
+    while (fscanf(fp, "%s Tu puntuacion fue de %i Puntos\n", jugadores[n].nombre, &jugadores[n].puntos) != EOF)
+    {
+        n++;
+        if (n >= capacidad)
+        {
+            capacidad *= 2; // Duplicar la capacidad
+            jugadores = (Jugador *)realloc(jugadores, capacidad * sizeof(Jugador));
+        }
+    }
+    fclose(fp);
+
+    // Ordenar puntuaciones
+    for (int i = 0; i < n - 1; i++)
+    {
+        for (int j = 0; j < n - i - 1; j++)
+        {
+            if (jugadores[j].puntos > jugadores[j + 1].puntos)
+            {
+                Jugador temp = jugadores[j];
+                jugadores[j] = jugadores[j + 1];
+                jugadores[j + 1] = temp;
+            }
+        }
+    }
+
+    // Mostrar resultados
+    printf("Puntuaciones ordenadas:\n");
+    for (int i = 0; i < n; i++)
+    {
+        printf("%s: %i Puntos\n", jugadores[i].nombre, jugadores[i].puntos);
+    }
+    getchar();
+    free(jugadores); // Liberar la memoria
+}
+
+// Procedimiento para crear el archivo de puntuacion
+void puntuacion();
+void puntuacion()
+{
+    FILE *fp;
+    fp = fopen("Puntos.txt", "a");
+    if (fp != NULL)
+    {
+        gotoxy(40, 12);
+        printf("Escribe tu nombre");
+        gotoxy(40, 13);
+        gets(nombre);
+        fprintf(fp, "%s Tu puntuacion fue de %i Puntos \n", nombre, puntos);
+        fclose(fp);
+        gotoxy(40, 14);
+        printf("Tu puntuacion se guardo con Exito");
+    }
+    else
+    {
+        printf("Error al abrir el archivo de puntuacion\n");
+    }
+    system("cls");
+}
 // Procedimiento de algoritmo random de mapa
 void algo_Mapa(int h);
 void algo_Mapa(int h)
@@ -479,6 +568,7 @@ void algo_Mapa(int h)
 
     if (murio != 1)
     {
+        puntos++;
         // Animación de entrada
         for (int i = 1; i < Yy / 2; i++)
         {
@@ -492,28 +582,28 @@ void algo_Mapa(int h)
         {
             if (h == 0)
             {
-                // Obtiene puerta y llave random
-
+                // Obtiene puerta
                 door = rand() % 3 + 1;
                 r_r();
                 switch (door)
                 {
-                case 1:
+                case 1: // Puerta esté abajo
                     DX = Xx - 1;
                     DY = Yy / 2;
                     mapa[h][DX][DY] = '=';
                     break;
-                case 2:
+                case 2: // Puerta esté arriba
                     DX = 0;
                     DY = Yy / 2;
                     mapa[h][DX][DY] = '=';
                     break;
-                case 3:
+                case 3: // Puerta esté Derecha
                     DX = Xx / 2;
                     DY = Yy - 1;
                     mapa[h][DX][DY] = '[';
                     break;
                 }
+                // Genera la llave una vez en una posicion random
                 while (r_x == Xx / 2 && r_y == Yy / 2)
                 {
                     r_r();
@@ -524,7 +614,6 @@ void algo_Mapa(int h)
             else
             {
                 // Obtiene cuantas puertas habrá
-
                 door = rand() % 2 + 1;
                 switch (door)
                 {
@@ -546,7 +635,7 @@ void algo_Mapa(int h)
                     break;
                 }
 
-                // bloque para generar pozos despues del nivel 5
+                // bloque para generar pozos despues del nivel 3
                 if (h > 3)
                 {
                     if (h < Xx * Yy)

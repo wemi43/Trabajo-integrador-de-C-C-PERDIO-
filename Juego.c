@@ -35,6 +35,7 @@ int main()
         gotoxy(40, 10);
         printf("Perdiste en el nivel %i.\n", o);
         Sleep(9);
+        puntuacion();
         gotoxy(40, 11);
         printf("Gracias por jugar. Presiona enter para salir");
         getchar();
@@ -47,9 +48,11 @@ int main()
         gotoxy(36, 11);
         printf("Tardaste %i habitaciones en salir\n", o);
         Sleep(9);
+        puntuacion();
         gotoxy(36, 12);
         printf("Gracias por jugar. Presiona enter para salir");
         getchar();
     }
+    procesarPuntuaciones();
     return 0;
 }
